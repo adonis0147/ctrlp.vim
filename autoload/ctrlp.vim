@@ -343,17 +343,13 @@ fu! ctrlp#files()
 		" Get the list of files
 		if empty(lscmd)
 			if !ctrlp#igncwd(s:dyncwd)
-				cal s:GlobPath(s:fnesc(s:dyncwd, 'g', ','), 0)
+				echo 'Using cIndexer to index files ...'
+				call cIndexer#Index(s:fnesc(s:dyncwd, 'g', ','))
 			en
 		el
 			sil! cal ctrlp#progress('Indexing...')
 			try | cal s:UserCmd(lscmd)
 			cat | retu [] | endt
-		en
-		" Remove base directory
-		cal ctrlp#rmbasedir(g:ctrlp_allfiles)
-		if len(g:ctrlp_allfiles) <= s:compare_lim
-			cal sort(g:ctrlp_allfiles, 'ctrlp#complen')
 		en
 		cal s:writecache(cafile)
 		let catime = getftime(cafile)
